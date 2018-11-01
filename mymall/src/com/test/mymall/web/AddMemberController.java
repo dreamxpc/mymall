@@ -9,19 +9,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.test.mymall.dao.MemberDao;
+import com.test.mymall.vo.Member;
+
 
 @WebServlet("/AddMemberController")
 public class AddMemberController extends HttpServlet {
-	// 1. 라우터
-	// 2. 모델 호출
-	// 3. 뷰 렌더링
-	private MemberDao memberDao;
+
+	private MemberService memberservice;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("AddMemberController.doGet()");
+		System.out.println("AddMemberController.java - doGet");
+		request.getRequestDispatcher("/WEB-INF/view/addMember.jsp").forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// this.memberDao
+		System.out.println("AddMemberController.java - doPost");
+/*		Member member = new Member();
+		memberDao = new MemberDao();
+		member.setId(request.getParameter("id"));
+		member.setPw(request.getParameter("pw"));	
+		member.setLevel(Integer.parseInt(request.getParameter("level")));
+		memberDao.insertMember(member);
+		response.sendRedirect(request.getContextPath()+"/LoginController");*/
+		
+		
 	}
 
 }
