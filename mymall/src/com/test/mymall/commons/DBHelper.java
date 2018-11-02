@@ -1,43 +1,31 @@
 package com.test.mymall.commons;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 
-public class DBHelper {
-	public static Connection getConnection() throws Exception {
-		System.out.println("DBHelper.java");
-		Connection conn = null;
-		Class.forName("com.mysql.jdbc.Driver");
-		String jdbcDriver = "jdbc:mysql://localhost:3306/mall?useUnicode=true&characterEncoding=euckr";
-		String dbID = "root";
-		String dbPW = "java0000";
-		conn = DriverManager.getConnection(jdbcDriver, dbID, dbPW);
-		return conn;
-	}
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-	public static void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
-		if (rs != null) {
-			try {
-				rs.close();
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
+public class DBHelper{
+	public static SqlSession getConnection() {
+		InputStream inputStream = null;
+		try {
+			String resource = "mybatis-config.xml";
+			inputStream  = Resources.getResourceAsStream(resource);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		if (pstmt != null) {
-			try {
-				pstmt.close();
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
+		 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream); 
+		 SqlSession sqlSession = sqlSessionFactory.openSession();
+		 
+//		 sqlSession.commit();
+//		 sqlSession.rollback();
+//		 sqlSession.close();
+		 
+		 return sqlSession;
+
 	}
 }

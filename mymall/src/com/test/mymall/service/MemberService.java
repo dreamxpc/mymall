@@ -2,6 +2,8 @@ package com.test.mymall.service;
 
 import java.sql.Connection;
 
+import org.apache.ibatis.session.SqlSession;
+
 import com.test.mymall.commons.DBHelper;
 import com.test.mymall.dao.MemberDao;
 import com.test.mymall.dao.MemberItemDao;
@@ -13,20 +15,15 @@ public class MemberService {
 	
 	// RemoveMemberController → MemberService.removeMember()호출
 	public void removeMember(int no) {
-		Connection conn = null;
+		SqlSession sqlSession;
 		try {
-			conn = DBHelper.getConnection();
-			conn.setAutoCommit(false);
-			memberDao = new MemberDao();
-			memberDao.deleteMember(conn, no);
-			memberItemDao = new MemberItemDao();
-			memberItemDao.deleteMemberItem(conn, no);
-			conn.commit();
+			sqlSession = DBHelper.getSqlSession();
+			sqlSession.commit();
 		} catch (Exception e) {
-			conn.rollback();
+			sqlSession.rollback();
 			e.printStackTrace();
 		} finally {
-			DBHelper.close(null, null, conn);
+			sqlSession.close();
 		}
 		
 	}

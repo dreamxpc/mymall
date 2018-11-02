@@ -4,6 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
 import com.mysql.jdbc.Connection;
 import com.test.mymall.vo.Item;
 
@@ -11,8 +15,9 @@ public class ItemDao {
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 
-	public ArrayList<Item> selectItemList(Connection conn, int currentPage, int rowPerPage) throws SQLException {
-		System.out.println("ItemDao.java - ArrayList<Item>");
+	public List<Item> selectItemList(SqlSession sqlSession) throws SQLException {
+		return sqlSession.selectList("com.test.mymall.dao.ItemMapper.selectItemList");
+/*		System.out.println("ItemDao.java - ArrayList<Item>");
 		ArrayList<Item> itemList = new ArrayList<Item>();
 		pstmt = conn.prepareStatement("select no,name,price from item where no limit ?, ?");
 		pstmt.setInt(1, (currentPage - 1) * rowPerPage);
@@ -27,9 +32,13 @@ public class ItemDao {
 		}
 		rs.close();
 		pstmt.close();
-		return itemList;
+		return itemList;*/
 	}
 
+	public int insertItem(SqlSession sqlSession, Item item) {
+		return sqlSession.insert("",item);
+	}
+	
 	public int getTotalItemCount(Connection conn) throws SQLException {
 		System.out.println("ItemDao.java - getTotalItemCount");
 		int totalCount = 0;
