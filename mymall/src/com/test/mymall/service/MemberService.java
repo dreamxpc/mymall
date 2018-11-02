@@ -2,7 +2,7 @@ package com.test.mymall.service;
 
 import java.sql.Connection;
 
-import com.test.mymal.commons.DBHelper;
+import com.test.mymall.commons.DBHelper;
 import com.test.mymall.dao.MemberDao;
 import com.test.mymall.dao.MemberItemDao;
 import com.test.mymall.vo.Member;

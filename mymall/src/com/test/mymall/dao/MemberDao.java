@@ -3,87 +3,43 @@ package com.test.mymall.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import com.test.mymal.commons.DBHelper;
 import com.test.mymall.vo.Member;
 
 public class MemberDao {
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
 
-	Connection connection = null;
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-
-	public Member login(Member member) {
-		System.out.println("login 메서드 실행 MemberDao.java");
-		Member loginMember = new Member();
-
-		try {
-			connection = DBHelper.getConnection();
-
-			preparedStatement = connection.prepareStatement("SELECT id, level FROM member WHERE id=? AND pw=?");
-			preparedStatement.setString(1, member.getId());
-			preparedStatement.setString(2, member.getPw());
-
-			resultSet = preparedStatement.executeQuery();
-
-			while (resultSet.next()) {
-				loginMember.setId(resultSet.getString("id"));
-				loginMember.setLevel(resultSet.getInt("level"));
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBHelper.close(connection, preparedStatement, resultSet);
-		}
-
-		return loginMember;
+	public void insertMember(Connection conn, Member m) throws SQLException {
+		System.out.println("MemberDao.java - insertMember");
+		pstmt = conn.prepareStatement("insert into member(id,pw,level) value(?,?,?)");
+		pstmt.setString(1, m.getId());
+		pstmt.setString(2, m.getPw());
+		pstmt.setInt(3, m.getLevel());
+		pstmt.executeUpdate();
+		pstmt.close();
 	}
 
-	public void insertMember(Member member) {
-		System.out.println("insertMember 메서드 실행 MemberDao.java");
-
-		try {
-			connection = DBHelper.getConnection();
-
-			preparedStatement = connection.prepareStatement("INSERT INTO member (id, pw, level) VALUE (?, ?, ?)");
-			preparedStatement.setString(1, member.getId());
-			preparedStatement.setString(2, member.getPw());
-			preparedStatement.setInt(3, member.getLevel());
-
-			preparedStatement.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBHelper.close(connection, preparedStatement, resultSet);
+	public Member login(Connection conn, Member m) throws SQLException {
+		System.out.println("MemberDao.java - login");
+		pstmt = conn.prepareStatement("select no,id,level from member where id=? and pw=?");
+		pstmt.setString(1, m.getId());
+		pstmt.setString(2, m.getPw());
+		rs = pstmt.executeQuery();
+		if (rs.next()) {
+			m.setNo(rs.getInt(1));
+			m.setId(rs.getString(2));
+			m.setLevel(rs.getInt(3));
+			m.setPw("");
+		} else {
+			m = null;
 		}
-
+		rs.close();
+		pstmt.close();
+		return m;
 	}
-	
-	//회원탈퇴
-	public void deleteMember(Connection conn, int no) {
-		
+	public Member selectMember(Connection conn,String id) {
+		sysou
 	}
-	
-/*	public void selectMember(Member member) {
-		System.out.println("selectMember 메서드 실행 MemberDao.java");
-
-		try {
-			connection = DBHelper.getConnection();
-
-			preparedStatement = connection.prepareStatement("INSERT INTO member (id, pw, level) VALUE (?, ?, ?)");
-			preparedStatement.setString(1, member.getId());
-			preparedStatement.setString(2, member.getPw());
-			preparedStatement.setInt(3, member.getLevel());
-
-			preparedStatement.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBHelper.close(connection, preparedStatement, resultSet);
-		}
-
-	}*/
 }
