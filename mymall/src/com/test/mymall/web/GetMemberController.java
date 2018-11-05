@@ -8,27 +8,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.test.mymall.dao.MemberDao;
+import com.test.mymall.service.MemberService;
 import com.test.mymall.vo.Member;
-
 
 @WebServlet("/GetMemberController")
 public class GetMemberController extends HttpServlet {
-
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doGet .......GetMemberController.java");	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("GetMemberController.java - doGet");
 		HttpSession session = request.getSession();
-		Member loginMember = (Member)session.getAttribute("loginMember");
-
-		if(session.getAttribute("loginMember") != null) {
-			response.sendRedirect(request.getContextPath()+"/IndexController");
-		}else {
-			MemberDao memberDao = new MemberDao();
-			//Member member = memberDao.selectMember(loginMember.getId());
-		
-		//	session.setAttribute("member", member);
-			request.getRequestDispatcher("WEB-INF/view/getMember.jsp").forward(request, response);	
+		Member loginMember = (Member) session.getAttribute("loginMember");
+		if (session.getAttribute("loginMember") == null) {
+			response.sendRedirect(request.getContextPath() + "/IndexController");
+		} else {
+			MemberService memberService = new MemberService();
+			Member member = memberService.selectMember(loginMember.getId());
+			session.setAttribute("member", member);
+			request.getRequestDispatcher("WEB-INF/view/getMember.jsp").forward(request, response);
 		}
 	}
 }

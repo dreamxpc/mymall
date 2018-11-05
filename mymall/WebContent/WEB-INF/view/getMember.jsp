@@ -5,31 +5,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>getMember.jsp</title>
+<title>Insert title here</title>
 </head>
 <body>
-	${member.getLevel()==0} ${member.getLevel()==1}
 	<table border="1">
 		<tr>
-			<td>NO</td>
-			<td>${member.getNo()}</td>
+			<th>No</th>
+			<th>ID</th>
+			<th>Level</th>
 		</tr>
 		<tr>
-			<td>ID</td>
-			<td>${member.getId()}</td>
-		</tr>
-		<tr>
-			<td>LEVEL</td>
-			<td>
+			<th>${member.getNo()}</th>
+			<th>${member.getId()}</th>
 			<c:choose>
-				<td><c:when test="${member.getLevel() == 1}">
-					ADMIN
-				</c:when> <c:otherwise>
-					GUEST
+				<c:when test="${member.getLevel() == 1}">
+					<th>Admin</th>
+				</c:when>
+				<c:otherwise>
+					<th>Guest</th>
 				</c:otherwise>
 			</c:choose>
-			</td>
 		</tr>
 	</table>
+	<a href="${pageContext.request.contextPath}/UpdateMemberController">UpdateMyProfile</a>
+	<a href="${pageContext.request.contextPath}/DeleteMemberController">DeleteMember</a>
+	<a href="${pageContext.request.contextPath}/IndexController">Back</a>
 </body>
 </html>

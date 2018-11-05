@@ -1,34 +1,35 @@
 package com.test.mymall.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+
+import com.test.mymall.vo.Member;
+import com.test.mymall.vo.MemberItem;
 
 public class MemberItemDao {
-	public void deleteMemberItem(Connection conn, int no) {
-		PreparedStatement stmt = conn.prepareStatement("");
+	private static String namespace = "com.test.mymall.dao.MemberItemMapper";
+
+	public void deleteMemberItem(SqlSession sqlSession, Member member) {
+		System.out.println("MemberItemDao.java - deleteMemberItem");
+		sqlSession.delete(namespace + ".deleteMemberItem", member);
 	}
-	
-	// MemberItem INNER JOIN item
-	public ArrayList<HashMap<String, Object>> getMemberItemList(int memberNO) {
-		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
-		String sql = "";
-		/*
-		select mi.no, mi.order_date, mi.item_no, i.name, i.price
-		from member_item mi inner join item i
-		on mi.item_no = i.no
-		where mi.member_no = ?
-		
-		while(rs.next()) {
-			// MemberItemJoinItem -> HashMap
-			HashMap<String, Object> map= new HashMap<String, Object>();
-			map.put("memberItemNo", rs.getInt("mi.no"));
-			map.put("itemPrice", rs.getInt("i.price"));
-			list.add(map);
+
+	public int order(SqlSession sqlSession, MemberItem memberItem) {
+		System.out.println("MemberItemDao.java - order");
+		return sqlSession.insert(namespace + ".order", memberItem);
+	}
+
+	public List<Map<String, Object>> orderList(SqlSession sqlSession, Member member) {
+		System.out.println("MemberItemDao.java - orderList");
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		if (member.getLevel() == 0) {
+			list = sqlSession.selectList(namespace + ".guestOrderList", member);
+		} else if (member.getLevel() == 1) {
+			list = sqlSession.selectList(namespace + ".adminOrderList", member);
 		}
-		*/
 		return list;
 	}
 }
